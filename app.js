@@ -1,10 +1,10 @@
-const express = require('express');
-const app = express();
-let counter = 0;
+const express = require('express')
+const app = express()
+let counter = 0
 
 app.get('/', (req, res) => {
-    counter++;
-    res.send(`
+	counter++
+	res.send(`
         <html>
             <head>
                 <title>DevOps Course</title>
@@ -25,13 +25,14 @@ app.get('/', (req, res) => {
             </head>
             <body>
                 <h1>Welcome to DevOps course!</h1>
+                <h1>This course contains a lot of interesting bla bla bla</h2>
                 <p>This page has been visited ${counter} times.</p>
             </body>
         </html>
-    `);
-});
+    `)
+})
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8080
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+	console.log(`Server is running on port ${port}`)
+})

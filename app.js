@@ -12,14 +12,14 @@ app.get('/', (req, res) => {
                     body {
                         font-family: Arial, sans-serif;
                         text-align: center;
-                        margin-top: 50px;
+                        margin-top: 80px;
                     }
                     h1 {
-                        color: #2C3E50;
+                        color: #4cc154;
                     }
                     p {
                         font-size: 1.2em;
-                        color: #34495E;
+                        color: #3c83ca;
                     }
                 </style>
             </head>

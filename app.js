@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
                 </style>
             </head>
             <body>
-                <h1>Welcome to DevOps course!</h1>
+                <h1>Welcome to KAI.KZ Course!</h1>
                 <h1>This course contains a lot of interesting materials</h2>
                 <p>This page has been visited ${counter} times.</p>
             </body>

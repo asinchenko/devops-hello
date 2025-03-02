@@ -4,5 +4,7 @@ stages:
 build-job:
   #используем стандартный dind:24 image
   stage: build
+  tags:
+    - kai-home
   script:
     - docker build -t devops_hello:$CI_PIPELINE_ID .

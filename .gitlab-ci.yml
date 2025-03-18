@@ -11,6 +11,8 @@ test-job:
     - echo "Installing dependencies..."
     - npm install
     - echo "Running basic test..."
+    - node app.js &
+    - sleep 5
     - |
       node <<EOF
       const http = require('http');

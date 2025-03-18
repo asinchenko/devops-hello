@@ -55,10 +55,8 @@ deploy-job:
     - ssh-keyscan -H $DEPLOY_HOST >> ~/.ssh/known_hosts
   script:
     - echo "Deploying to server..."
-    - |
-      ssh $DEPLOY_USER@$DEPLOY_HOST "
-      docker pull $DOCKERHUB_USERNAME/devops_hello:$CI_PIPELINE_ID
-      docker stop devops_hello || true
-      docker rm devops_hello || true
-      docker run -d --name devops_hello -p 80:8080 $DOCKERHUB_USERNAME/devops_hello:$CI_PIPELINE_ID"
+    - ssh $DEPLOY_USER@$DEPLOY_HOST docker pull $DOCKERHUB_USERNAME/devops_hello:$CI_PIPELINE_ID
+    - ssh $DEPLOY_USER@$DEPLOY_HOST docker stop devops_hello
+    - ssh $DEPLOY_USER@$DEPLOY_HOST docker rm devops_hello
+    - ssh $DEPLOY_USER@$DEPLOY_HOST docker run -d --name devops_hello -p 80:8080 $DOCKERHUB_USERNAME/devops_hello:$CI_PIPELINE_ID"
     - echo "Deployment completed! ✅"

@@ -38,5 +38,5 @@ build-job:
   tags:
     - kai-home
   script:
-    - docker build -t devops_hello:$CI_PIPELINE_ID .
-    - docker push devops_hello:$CI_PIPELINE_ID
+    - docker build -t wonderfulsanchez/devops_hello:$CI_PIPELINE_ID .
+    - docker push wonderfulsanchez/devops_hello:$CI_PIPELINE_ID

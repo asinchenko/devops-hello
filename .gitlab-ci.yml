@@ -41,3 +41,21 @@ build-job:
   script:
     - docker build -t wonderfulsanchez/devops_hello:$CI_PIPELINE_ID .
     - docker push wonderfulsanchez/devops_hello:$CI_PIPELINE_ID
+
+deploy-job:
+  stage: deploy
+  tags:
+    - kai-home
+  before_script:
+    - apk add --no-cache openssh-client
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
+  script:
+    - export DOCKER_HOST="ssh://$DEPLOY_USER@$DEPLOY_HOST"
+    - docker ps # Test connection
+    - docker pull "$DOCKERHUB_USERNAME/devops_hello:$CI_PIPELINE_ID"
+    - docker stop devops_hello || true
+    - docker rm devops_hello || true
+    - docker run -d --name devops_hello -p 8080:8080 "$DOCKERHUB_USERNAME/devops_hello:$CI_PIPELINE_ID"

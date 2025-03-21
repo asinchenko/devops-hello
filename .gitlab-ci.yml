@@ -1,16 +1,32 @@
 stages:
-  - test
   - build
+  - test
+  - containerize
   - deploy
+
+build-job:
+  image: node:22-alpine
+  stage: build
+  tags:
+    - kai-home
+  script:
+    - echo "Installing dependencies..."
+    - npm install
+    - echo "Building the application..."
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 hour
 
 test-job:
   image: node:22-alpine
   stage: test
   tags:
     - kai-home
+  dependencies:
+    - build-job
   script:
-    - echo "Installing dependencies..."
-    - npm install
     - echo "Running basic test..."
     - node app.js &
     - sleep 5
@@ -33,14 +49,16 @@ test-job:
       });
       EOF
 
-build-job:
-  #используем стандартный dind:24 image
-  stage: build
+containerize-job:
+  image: docker:24-dind
+  stage: containerize
   tags:
     - kai-home
+  dependencies:
+    - build-job
   script:
-    - docker build -t wonderfulsanchez/devops_hello:$CI_PIPELINE_ID .
-    - docker push wonderfulsanchez/devops_hello:$CI_PIPELINE_ID
+    - docker build -t $DOCKERHUB_USERNAME/devops_hello:$CI_PIPELINE_ID .
+    - docker push $DOCKERHUB_USERNAME/devops_hello:$CI_PIPELINE_ID
 
 deploy-job:
   stage: deploy
@@ -54,7 +72,7 @@ deploy-job:
     - ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
   script:
     - export DOCKER_HOST="ssh://$DEPLOY_USER@$DEPLOY_HOST"
-    - docker ps # Test connection
+    - docker ps
     - docker pull "$DOCKERHUB_USERNAME/devops_hello:$CI_PIPELINE_ID"
     - docker stop devops_hello || true
     - docker rm devops_hello || true

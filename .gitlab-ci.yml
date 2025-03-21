@@ -29,7 +29,7 @@ test-job:
   script:
     - echo "Running basic test..."
     - ls -la
-    - cd /dist
+    - cd dist
     - node app.js &
     - sleep 5
     - |

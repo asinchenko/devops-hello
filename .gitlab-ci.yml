@@ -10,7 +10,7 @@ build-job:
   tags:
     - kai-home
   script:
-    - echo "Building the application..."
+    - echo "Some changes"
     - npm run build
   cache:
     key: npm-cache

@@ -28,8 +28,8 @@ test-job:
     - build-job
   script:
     - echo "Running basic test..."
-    - ls -la
     - cd dist
+    - ls -la
     - node app.js &
     - sleep 5
     - |

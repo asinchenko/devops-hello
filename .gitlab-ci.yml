@@ -10,13 +10,11 @@ build-job:
   tags:
     - kai-home
   script:
-    - echo "Installing dependencies..."
-    - npm install
     - echo "Building the application..."
     - npm run build
   artifacts:
     paths:
-      - dist/
+      - .
     expire_in: 1 hour
 
 test-job:
@@ -28,8 +26,6 @@ test-job:
     - build-job
   script:
     - echo "Running basic test..."
-    - cd dist
-    - ls -la
     - node app.js &
     - sleep 5
     - |

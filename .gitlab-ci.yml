@@ -9,21 +9,26 @@ build-job:
   stage: build
   tags:
     - kai-home
+  cache:
+    key: npm-cache
+    paths:
+      - node_modules/
+      - dist/
   script:
     - echo "Building the application..."
+    - npm ci
     - npm run build
-  artifacts:
-    paths:
-      - .
-    expire_in: 1 hour
 
 test-job:
   image: node:22-alpine
   stage: test
   tags:
     - kai-home
-  dependencies:
-    - build-job
+  cache:
+    key: npm-cache
+    paths:
+      - node_modules/
+      - dist/
   script:
     - echo "Running basic test..."
     - node app.js &
@@ -52,8 +57,7 @@ containerize-job:
   stage: containerize
   tags:
     - kai-home
-  dependencies:
-    - build-job
+  dependencies: [] # Отключаем автоматическую загрузку артефактов
   script:
     - docker build -t $DOCKERHUB_USERNAME/devops_hello:$CI_PIPELINE_ID .
     - docker push $DOCKERHUB_USERNAME/devops_hello:$CI_PIPELINE_ID
@@ -62,7 +66,6 @@ deploy-job:
   stage: deploy
   tags:
     - kai-home
-  dependencies: [] # ОТКЛЮЧАЕМ автоматическую загрузку артефактов
   before_script:
     - apk add --no-cache openssh-client
     - mkdir -p ~/.ssh
@@ -71,7 +74,7 @@ deploy-job:
     - ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
   script:
     - export DOCKER_HOST="ssh://$DEPLOY_USER@$DEPLOY_HOST"
-    - docker ps
+    - docker ps # Test connection
     - docker pull "$DOCKERHUB_USERNAME/devops_hello:$CI_PIPELINE_ID"
     - docker stop devops_hello || true
     - docker rm devops_hello || true

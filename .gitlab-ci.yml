@@ -13,10 +13,8 @@ build-job:
     key: npm-cache
     paths:
       - node_modules/
-      - dist/
   script:
     - echo "Building the application..."
-    - npm ci
     - npm run build
 
 test-job:
@@ -28,7 +26,6 @@ test-job:
     key: npm-cache
     paths:
       - node_modules/
-      - dist/
   script:
     - echo "Running basic test..."
     - node app.js &
@@ -55,6 +52,10 @@ test-job:
 containerize-job:
   image: docker:24-dind
   stage: containerize
+  cache:
+    key: npm-cache
+    paths:
+      - node_modules/
   tags:
     - kai-home
   dependencies: [] # Отключаем автоматическую загрузку артефактов

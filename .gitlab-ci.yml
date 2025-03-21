@@ -62,6 +62,7 @@ deploy-job:
   stage: deploy
   tags:
     - kai-home
+  dependencies: [] # ОТКЛЮЧАЕМ автоматическую загрузку артефактов
   before_script:
     - apk add --no-cache openssh-client
     - mkdir -p ~/.ssh

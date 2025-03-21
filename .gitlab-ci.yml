@@ -9,13 +9,16 @@ build-job:
   stage: build
   tags:
     - kai-home
+  script:
+    - echo "Building the application..."
+    - npm run build
   cache:
     key: npm-cache
     paths:
       - node_modules/
-  script:
-    - echo "Building the application..."
-    - npm run build
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" && $CI_COMMIT_MESSAGE =~ /deploy/i'
+    - when: manual
 
 test-job:
   image: node:22-alpine

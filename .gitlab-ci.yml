@@ -10,7 +10,7 @@ build-job:
   tags:
     - kai-home
   script:
-    - echo "Building the application..."
+    - echo "Building the application... some changes"
     - npm run build
   artifacts:
     paths:

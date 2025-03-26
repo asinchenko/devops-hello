@@ -16,6 +16,9 @@ build-job:
     paths:
       - . #current folder as artifact
     expire_in: 1 hour
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" && $CI_COMMIT_MESSAGE =~ /deploy/i'
+    - when: manual
 
 test-job:
   image: node:22-alpine

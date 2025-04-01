@@ -7,7 +7,7 @@ app.get('/', (req, res) => {
 	res.send(`
         <html>
             <head>
-                <title>DevOps Course</title>
+                <title>DevOps Course Super cool new features</title>
                 <style>
                     body {
                         font-family: Arial, sans-serif;

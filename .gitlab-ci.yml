@@ -20,6 +20,22 @@ build-job:
     - if: '$CI_COMMIT_BRANCH == "main" && $CI_COMMIT_MESSAGE =~ /deploy/i'
     - when: manual
 
+build-job-staging:
+  image: node:22-alpine
+  stage: build
+  tags:
+    - kai-home
+  script:
+    - echo "Building the application... some changes"
+    - npm run build
+  artifacts:
+    paths:
+      - . #current folder as artifact
+    expire_in: 1 hour
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" && $CI_COMMIT_MESSAGE =~ /deploy/i'
+    - when: manual
+
 test-job:
   image: node:22-alpine
   stage: test
@@ -77,5 +93,6 @@ deploy-job:
     - docker ps # Test connection
     - docker pull "$DOCKERHUB_USERNAME/devops_hello:$CI_PIPELINE_ID"
     - docker stop devops_hello || true
-    - docker rm devops_hello || true
-    - docker run -d --name devops_hello -p 8080:8080 "$DOCKERHUB_USERNAME/devops_hello:$CI_PIPELINE_ID"
+    - docker rm --force devops_hello || true
+    - docker stack rm devops_hello || true
+    - docker stack deploy -c docker-stack.yml devops_hello
